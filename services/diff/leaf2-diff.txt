@@ -1,0 +1,31 @@
+@@ -13,6 +13,8 @@
+ no aaa root
+ !
+ username admin privilege 15 role network-admin secret sha512 $6$npDlaZ6ZLD9s8Lei$bDZOAJKAEwTWPU7MDn9yiOeRjszqzMpronuXRFg0f11Uqsdbzy08l8A1ZpzrDHsQMQAYBrKv6Cnh7Lw54WJ.P0
++!
++vlan 50
+ !
+ interface Ethernet1
+    no switchport
+@@ -41,6 +43,7 @@
+ interface Ethernet9
+ !
+ interface Ethernet10
++   switchport access vlan 50
+ !
+ interface Ethernet11
+ !
+@@ -51,6 +54,13 @@
+ !
+ interface Management1
+    ip address 172.26.11.35/24
++!
++interface Vxlan1
++   vxlan source-interface Loopback0
++   vxlan udp-port 4789
++   vxlan vlan 50 vni 50
++   vxlan flood vtep 172.16.10.5
++   vxlan vlan 50 flood vtep 172.16.10.5
+ !
+ ip routing
+ !

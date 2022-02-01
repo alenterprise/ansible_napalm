@@ -1,0 +1,155 @@
+#
+# Nodes in the network
+#
+
+---
+
+common:
+  bgp_asn: 65500
+
+nodes:
+
+  spine1:
+    mgmt: 172.26.11.37
+    rid:  172.16.10.2
+    links:
+      Ethernet1: { ip: 20.0.0.10, remote: leaf1 , cost: 100 , vlan: 12}
+      Ethernet2: { ip: 20.0.0.25, remote: leaf2 , cost: 100 , vlan: 32}
+      Ethernet3: { ip: 20.0.0.33, remote: leaf3 , cost: 100 , vlan: 42}
+    bgp:
+       ibgp:
+         rr: true
+         peers:
+            - 172.16.10.4
+         clients:
+            - 172.16.10.1
+            - 172.16.10.3
+            - 172.16.10.5
+         af:
+            - ipv4
+    ospf:
+        area: 0.0.0.0
+        network: p2p
+
+
+
+
+
+  leaf2:
+    mgmt: 172.26.11.35
+    rid:  172.16.10.3
+    links:
+      Ethernet1: { ip: 20.0.0.26, remote: spine1 , cost: 100 , vlan: 32}
+      Ethernet2: { ip: 20.0.0.41, remote: spine2 , cost: 100 , vlan: 52}
+    bgp:
+       ibgp:
+         peers:
+            - 172.16.10.2
+            - 172.16.10.4
+         af:
+            - ipv4
+    ospf:
+        area: 0.0.0.0
+        network: p2p
+
+
+
+    services:
+      - name: Customer-3
+        vtep:
+           - 172.16.10.1 
+        vnid: 
+           - 30
+        interface: Ethernet8
+        vlan: 39
+      - name: Customer-4
+        vtep:
+           - 172.16.10.1 
+        vnid: 
+           - 40
+        interface: Ethernet11
+        vlan: 60
+
+
+  leaf1:
+    mgmt: 172.26.11.36
+    rid:  172.16.10.1
+    links:
+      Ethernet1: { ip: 20.0.0.9, remote: spine1 , cost: 100 , vlan: 12}
+      Ethernet2: { ip: 20.0.0.17, remote: spine2 , cost: 100 , vlan: 13}
+    bgp:
+       ibgp:
+         peers:
+            - 172.16.10.2
+            - 172.16.10.4
+         af:
+            - ipv4
+    ospf:
+        area: 0.0.0.0
+        network: p2p
+
+
+
+    services:
+      - name: Customer-3
+        vtep:
+           - 172.16.10.3 
+        vnid: 
+           - 30
+        interface: Ethernet8
+        vlan: 39
+      - name: Customer-4
+        vtep:
+           - 172.16.10.3 
+        vnid: 
+           - 40
+        interface: Ethernet11
+        vlan: 60
+
+
+  spine2:
+    mgmt: 172.26.11.38
+    rid:  172.16.10.4
+    links:
+      1/1/6: { ip: 20.0.0.18, remote: leaf1 , cost: 100 , vlan: 13}
+      1/1/23: { ip: 20.0.0.42, remote: leaf2 , cost: 100 , vlan: 52}
+      1/1/24: { ip: 20.0.0.45, remote: leaf3 , cost: 100 , vlan: 62}
+    bgp:
+       ibgp:
+         rr: true
+         peers:
+            - 172.16.10.2
+         clients:
+            - 172.16.10.1
+            - 172.16.10.3
+            - 172.16.10.5
+         af:
+            - ipv4
+    ospf:
+        area: 0.0.0.0
+        network: p2p
+
+
+
+
+
+  leaf3:
+    mgmt: 172.26.11.39
+    rid:  172.16.10.5
+    links:
+      1/1/1: { ip: 20.0.0.34, remote: spine1 , cost: 100 , vlan: 42}
+      1/1/24: { ip: 20.0.0.46, remote: spine2 , cost: 100 , vlan: 62}
+    bgp:
+       ibgp:
+         peers:
+            - 172.16.10.2
+            - 172.16.10.4
+         af:
+            - ipv4
+    ospf:
+        area: 0.0.0.0
+        network: p2p
+
+
+
+

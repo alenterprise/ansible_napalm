@@ -1,0 +1,152 @@
+{% set node = nodes[inventory_hostname] %}
+! Chassis:
+system name "{{inventory_hostname}}"
+! Configuration:
+configuration error-file-limit 2
+! Capability Manager:
+hash-control extended
+! Virtual Flow Control:
+! LFP: 
+! Interface:
+! Port_Manager: 
+! Link Aggregate:
+! VLAN:
+! PVLAN:
+! Spanning Tree:
+spantree mode flat
+spantree vlan 1 admin-state enable
+! DA-UNP:
+! Bridging:
+! Port Mirroring:
+! Port Mapping:
+! IP:
+ip interface "Loopback0" address {{node.rid}}
+{% for intf,intf_attr in node.links.items() %}
+ip interface "{{intf}}" address {{intf_attr.ip}}/{{intf_attr.mask|default('30')}} vlan {{intf_attr.vlan}} rtr-port port {{intf}} untagged
+{% endfor %}
+! IPv6:
+! IPSec:
+! IPMS:
+! AAA:
+aaa authentication default "local" 
+aaa authentication console "local"
+session cli timeout 100
+aaa tacacs command-authorization disable
+
+! NTP:
+! QOS:
+! Policy Manager:
+! VLAN Stacking:
+! ERP:
+! MVRP:
+! LLDP:
+! UDLD:
+! Server Load Balance:
+! High Availability Vlan:
+! Session Manager:
+session prompt default "{{inventory_hostname}}>"
+
+! Web:
+! Trap Manager:
+! Health Monitor:
+! System Service:
+! SNMP:
+! BFD:
+! IP Route Manager:
+! VRRP:
+ip router router-id {{node.rid}}
+! UDP Relay:
+! RIP:
+! OSPF:
+{% if node.ospf is defined %}
+ip load ospf
+ip ospf area {{node.ospf.area}}
+{% for intf,intf_attr in node.links.items() %}
+ip ospf interface "{{intf}}"
+ip ospf interface "{{intf}}" area {{node.ospf.area}}
+ip ospf interface "{{intf}}" cost {{intf_attr.cost}}
+{% if node.ospf.network is defined %}
+{% if node.ospf.network == 'p2p' %}
+ip ospf interface "{{intf}}" type point-to-point
+{% endif %}
+{% endif %}
+ip ospf interface "{{intf}}" admin-state enable
+{% endfor %}
+ip ospf admin-state enable
+{% endif %}
+!
+! IP Multicast:
+! DVMRP:
+! IPMR:
+! RIPng:
+! OSPF3:
+! BGP:
+!
+! ISIS:
+! Netsec:
+! Module:
+! LAN Power:
+! RDP:
+! DHL:
+! Ethernet-OAM:
+! SAA:
+! SPB-ISIS:
+! SVCMGR:
+{% if node.vxlan.peer is defined %}
+service stats disable
+service access port 1/1/47
+service sdp {{node.vxlan.vnid}} vxlan far-end {{node.vxlan.peer}} description "peer to {{node.vxlan.peer}}"
+service {{node.vxlan.vnid}} vxlan vnid {{node.vxlan.vnid}} multicast-mode head-end description "VXLAN VNID 99"
+service {{node.vxlan.vnid}} sap port 1/1/47:0 stats enable
+service {{node.vxlan.vnid}} bind-sdp {{node.vxlan.vnid}}
+{% endif %}
+! LDP:
+! EVB:
+! APP-FINGERPRINT:
+! FCOE:
+! QMR: 
+! OPENFLOW:
+! Dynamic auto-fabric:
+! SIP Snooping:
+! DHCP Server:
+! DHCPv6 Relay:
+! DHCPv6 Server:
+! DHCP Message Service:
+! DHCP Active Lease Service:
+! Virtual Chassis Split Protection:
+! DHCP Snooping:
+! APP-MONITORING:
+! Loopback Detection:
+! VM-SNOOPING:
+! PPPOE-IA:
+! Security:
+! Zero Configuration:
+! MAC Security:
+! OVC:
+! EFM-OAM:
+! ALARM-MANAGER:
+! DEVICE-PROFILE:
+! PTP:
+{% if node.bgp is defined %}
+ip load bgp
+ip bgp autonomous-system {{common.bgp_asn}}
+ip bgp network {{node.rid}} 255.255.255.255
+ip bgp network {{node.rid}} 255.255.255.255 admin-state enable
+{% for peer in node.bgp.ibgp.peers %}
+ip bgp neighbor {{peer}}
+ip bgp neighbor {{peer}} remote-as {{common.bgp_asn}}
+ip bgp neighbor {{peer}} update-source "Loopback0"
+ip bgp neighbor {{peer}} admin-state enable
+{% endfor %}
+{%  if node.bgp.ibgp.rr is defined and node.bgp.ibgp.rr == true   %}
+{% for client in node.bgp.ibgp.clients %}
+ip bgp neighbor {{client}}
+ip bgp neighbor {{client}} remote-as {{common.bgp_asn}}
+ip bgp neighbor {{client}} route-reflector-client
+ip bgp neighbor {{client}} update-source "Loopback0"
+ip bgp neighbor {{client}} admin-state enable
+{% endfor %}
+{% endif %}
+ip bgp admin-state enable
+{% endif %}
+

@@ -1,0 +1,6 @@
+OS,host,username,password
+eos,172.26.11.35,admin,switch
+eos,172.26.11.36,admin,switch
+eos,172.26.11.37,admin,switch
+aos,172.26.11.38,admin,switch
+aos,172.26.11.39,admin,switch

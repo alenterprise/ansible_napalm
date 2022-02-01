@@ -1,0 +1,29 @@
+---
+nodes: 
+  - 
+    mgmt: "172.26.11.37"
+    name: spine1
+    rid: "172.16.10.2"
+  - 
+    mgmt: "172.26.11.35"
+    name: leaf2
+    rid: "172.16.10.3"
+  - 
+    mgmt: "172.26.11.36"
+    name: leaf1
+    rid: "172.16.10.1"
+  - 
+    mgmt: "172.26.11.38"
+    name: spine2
+    rid: "172.16.10.4"
+  - 
+    mgmt: "172.26.11.39"
+    name: leaf3
+    rid: "172.16.10.5"
+
+services: 
+  - 
+    name: Customer-1
+    vnid: 99
+    vteps: [172.16.10.1, 172.16.10.5]
+    sites: [{"vtep": "172.16.10.1", "interface": "Ethernet4","vlan": "99"},{"vtep": "172.16.10.5", "interface": "1/1/47","vlan": "99"}] 

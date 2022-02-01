@@ -1,0 +1,90 @@
+--- 
+common:
+  bgp_asn: 65500
+
+links: 
+  - 
+    cost: 100
+    left: leaf1
+    left_ip: "20.0.0.9"
+    left_port: Ethernet1
+    right: spine1
+    right_ip: "20.0.0.10"
+    right_port: Ethernet1
+    vlan: 12
+  - 
+    cost: 100
+    left: leaf1
+    left_ip: "20.0.0.17"
+    left_port: Ethernet2
+    right: spine2
+    right_ip: "20.0.0.18"
+    right_port: 1/1/6
+    vlan: 13
+  - 
+    cost: 100
+    left: spine1
+    left_ip: "20.0.0.25"
+    left_port: Ethernet2
+    right: leaf2
+    right_ip: "20.0.0.26"
+    right_port: Ethernet1
+    vlan: 32
+  - 
+    cost: 100
+    left: spine1
+    left_ip: "20.0.0.33"
+    left_port: Ethernet3
+    right: leaf3
+    right_ip: "20.0.0.34"
+    right_port: 1/1/1
+    vlan: 42
+  - 
+    cost: 100
+    left: leaf2
+    left_ip: "20.0.0.41"
+    left_port: Ethernet2
+    right: spine2
+    right_ip: "20.0.0.42"
+    right_port: 1/1/23
+    vlan: 52
+  - 
+    cost: 100
+    left: spine2
+    left_ip: "20.0.0.45"
+    left_port: 1/1/24
+    right: leaf3
+    right_ip: "20.0.0.46"
+    right_port: 1/1/24
+    vlan: 62
+nodes: 
+  - 
+    mgmt: "172.26.11.37"
+    name: spine1
+    rid: "172.16.10.2"
+  - 
+    mgmt: "172.26.11.35"
+    name: leaf2
+    rid: "172.16.10.3"
+  - 
+    mgmt: "172.26.11.36"
+    name: leaf1
+    rid: "172.16.10.1"
+  - 
+    mgmt: "172.26.11.38"
+    name: spine2
+    rid: "172.16.10.4"
+  - 
+    mgmt: "172.26.11.39"
+    name: leaf3
+    rid: "172.16.10.5"
+
+ospf: 
+  area: "0.0.0.0"
+  network: p2p
+  
+bgp: 
+  rr: [172.16.10.2, 172.16.10.4]
+  clients: [172.16.10.1, 172.16.10.3, 172.16.10.5]
+  af:
+    - ipv4

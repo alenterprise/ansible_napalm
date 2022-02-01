@@ -1,0 +1,23 @@
+{% set node = nodes[inventory_hostname] %}
+ !
+{% if node.services is defined %}
+{% for i in node.services %}
+
+vlan {{ i.vlan }}
+interface {{i.interface}}
+   switchport mode access
+   switchport access vlan {{ i.vlan }}
+
+{% for param in i.vnid %}
+   interface Vxlan1
+   vxlan vlan {{i.vlan}} vni {{param}}
+{% endfor %} 
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+{% for hosts in i.vtep %}   
+   vxlan flood vtep {{hosts}}
+   vxlan vlan {{i.vlan}} flood vtep {{hosts}}
+{% endfor %}
+{% endfor %}
+{% endif %}
+!

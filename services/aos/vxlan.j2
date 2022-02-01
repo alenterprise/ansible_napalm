@@ -1,0 +1,103 @@
+{% set node = nodes[inventory_hostname] %}
+! Chassis:
+system name "{{inventory_hostname}}"
+! Configuration:
+! Capability Manager:
+! Virtual Flow Control:
+! LFP: 
+! Interface:
+! Port_Manager: 
+! Link Aggregate:
+! VLAN:
+! PVLAN:
+! Spanning Tree:
+! DA-UNP:
+! Bridging:
+! Port Mirroring:
+! Port Mapping:
+! IP:
+! IPv6:
+! IPSec:
+! IPMS:
+! AAA:
+! NTP:
+! QOS:
+! Policy Manager:
+! VLAN Stacking:
+! ERP:
+! MVRP:
+! LLDP:
+! UDLD:
+! Server Load Balance:
+! High Availability Vlan:
+! Session Manager:
+! Web:
+! Trap Manager:
+! Health Monitor:
+! System Service:
+! SNMP:
+! BFD:
+! IP Route Manager:
+! VRRP:
+! UDP Relay:
+! RIP:
+! OSPF:
+! IP Multicast:
+! DVMRP:
+! IPMR:
+! RIPng:
+! OSPF3:
+! BGP:
+! ISIS:
+! Netsec:
+! Module:
+! LAN Power:
+! RDP:
+! DHL:
+! Ethernet-OAM:
+! SAA:
+! SPB-ISIS:
+! SVCMGR:
+{% if node.services is defined %}
+{% for i in node.services %}
+service stats disable
+service access port {{i.interface}}
+
+{% for vnids in i.vnid %}
+{% for vteps in i.vtep %}
+service sdp {{vnids}} vxlan far-end {{vteps}} description "{{i.name}}"
+service {{vnids}} vxlan vnid {{vnids}} multicast-mode head-end description "{{i.name}}"
+service {{vnids}} sap port {{i.interface}}:0 stats enable
+service {{vnids}} bind-sdp {{vnids}}
+{% endfor %}
+
+{% endfor %}
+{% endfor %}
+{% endif %}
+! LDP:
+! EVB:
+! APP-FINGERPRINT:
+! FCOE:
+! QMR: 
+! OPENFLOW:
+! Dynamic auto-fabric:
+! SIP Snooping:
+! DHCP Server:
+! DHCPv6 Relay:
+! DHCPv6 Server:
+! DHCP Message Service:
+! DHCP Active Lease Service:
+! Virtual Chassis Split Protection:
+! DHCP Snooping:
+! APP-MONITORING:
+! Loopback Detection:
+! VM-SNOOPING:
+! PPPOE-IA:
+! Security:
+! Zero Configuration:
+! MAC Security:
+! OVC:
+! EFM-OAM:
+! ALARM-MANAGER:
+! DEVICE-PROFILE:
+! PTP:

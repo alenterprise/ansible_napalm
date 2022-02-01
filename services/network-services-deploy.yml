@@ -1,0 +1,34 @@
+---
+## Play 1
+- hosts: localhost
+  name: Generate per-node model
+  gather_facts: no
+  tags: [ service-model ]
+  vars_files:
+  - "{{model|default('service-model.yml')}}"
+  tasks:
+  - name: Create per-node model from service model
+    template: src=service-to-node.j2 dest=./per-service-model.yml
+##Play 2
+- name: Deploy VXLAN
+  gather_facts: no
+  connection: local
+  hosts: all
+  tags: [ VXLAN ]
+  tasks:
+    - include_vars: "./per-service-model.yml"
+    - name: Generate VXLAN config
+      template: src={{dev_os}}/vxlan.j2 dest=node_configs/{{inventory_hostname}}-vxlan-config.txt
+    - file: path=diff state=directory
+      run_once: true
+    - name: Push VXLAN Configuration
+      napalm_install_config:
+        hostname: "{{ ansible_host }}"
+        username: "{{ ansible_user }}"
+        dev_os: "{{dev_os}}"
+        password: "{{ ansible_ssh_pass }}"
+        config_file: node_configs/{{inventory_hostname}}-vxlan-config.txt
+        commit_changes: "{{commit}}"
+        replace_config: "{{replace}}"
+        diff_file: diff/{{inventory_hostname}}-diff.txt
+

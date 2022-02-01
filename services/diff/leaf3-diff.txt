@@ -1,0 +1,7 @@
+  ! SVCMGR:
++ service stats disable
++ service access port 1/1/20
++ service sdp 50 vxlan far-end 172.16.10.3 description "Customer-2"
++ service 50 vxlan vnid 50 multicast-mode head-end description "Customer-2"
++ service 50 sap port 1/1/20:0 stats enable
++ service 50 bind-sdp 50

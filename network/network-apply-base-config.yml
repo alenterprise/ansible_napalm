@@ -1,0 +1,26 @@
+---
+## First Play
+- hosts: localhost
+  name: Apply base config
+  gather_facts: no
+  vars_files:
+  - "{{model|default('network-model.yml')}}"
+# if commit=0 then we will not commit the changes we will only generate diff
+# if commit=1 then we will  commit the changes and generate diff
+  connection: local
+  hosts: all
+  tasks:
+    - include_vars: "./node-model.yml"
+    - file: path=diff state=directory
+      run_once: true
+    - name: Load configuration to nodes
+      napalm_install_config:
+        hostname: "{{ ansible_host }}"
+        username: "{{ ansible_user }}"
+        dev_os: "{{dev_os}}"
+        password: "{{ ansible_ssh_pass }}"
+        config_file: base_node_configs/{{inventory_hostname}}-config.txt
+        commit_changes: "{{commit}}"
+        replace_config: "{{replace}}"
+        diff_file: diff/{{inventory_hostname}}-diff.txt
+      when: "inventory_hostname in nodes.keys()"
