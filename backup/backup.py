@@ -5,7 +5,7 @@ import json
 import csv
 import sys
 
-with open('/etc/ansible/backup/inventory.csv', newline='') as csvfile:
+with open('inventory.csv', newline='') as csvfile:
      reader = csv.DictReader(csvfile)
      for row in reader:
         driver = get_network_driver(row['OS'])
