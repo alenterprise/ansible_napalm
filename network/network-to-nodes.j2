@@ -7,7 +7,7 @@
 ---
 
 common:
-  bgp_asn: 65500
+    bgp_asn: {{ common.bgp_asn }}
 
 nodes:
 {% for node in nodes %}
@@ -26,22 +26,34 @@ nodes:
 {%  if bgp is defined %}
     bgp:
        ibgp:
-{%       if node.rid in bgp.rr  %}
+{%       if node.name in bgp.rr  %}
          rr: true
          peers:
 {%          for peer in bgp.rr %}
-{%            if node.rid != peer  %}
-            - {{ peer }}
+{%            if node.name != peer  %}
+{%              for other_node in nodes %}
+{%                if other_node.name == peer %}
+            -  {{ other_node.rid }}
+{%                endif %}
+{%              endfor  %}
 {%       endif %}
 {%          endfor %}
          clients:
 {%          for peer in bgp.clients %}
-            - {{ peer }}
+{%            for other_node in nodes %}
+{%              if other_node.name == peer %}
+            -  {{ other_node.rid }}
+{%              endif %}
+{%            endfor  %}
 {%          endfor %}
 {%       else %}
          peers:
 {%          for peer in bgp.rr %}
-            - {{ peer }}
+{%            for other_node in nodes %}
+{%              if other_node.name == peer %}
+            -  {{ other_node.rid }}
+{%              endif %}
+{%            endfor  %}
 {%          endfor %}
 {%       endif %}
          af:
@@ -54,5 +66,4 @@ nodes:
         area: {{ospf.area}}
         network: {{ospf.network}}
 {%   endif %}
-
 {% endfor %}
