@@ -1,0 +1,44 @@
+#
+# Nodes in the network
+#
+---
+
+nodes:
+{% for node in nodes %}
+
+  {{ node.name }}:
+    mgmt: {{ node.mgmt }}
+    rid:  {{ node.rid }}
+
+{% if services is defined %}
+{%-   set ns = namespace(node_has_services = false) -%}
+{%   for service in services %}
+{%     for site in service.sites %}
+{%       if node.name == site.vtep %}
+{%         if not ns.node_has_services %}
+{%           set ns.node_has_services = true %}
+    services:
+{%         endif %}
+       - name: {{ service.name }}
+         vnid: {{ service.vnid }}
+         vlan: {{ service.vlan }}
+{%     set vteps = []  -%}
+{%-    set interfaces = []  -%} 
+{%        for site in service.sites %}
+{%         if node.name != site.vtep %}
+{%            for other_node in nodes %}
+{%             if other_node.name == site.vtep %}
+{{-              vteps.append(other_node.rid) -}}
+{%               endif %}
+{%-             endfor %}
+{%         else %}
+{{-           interfaces.append(site.interface) -}} 
+{%         endif %}     
+{%-        endfor %}
+         vteps: {{ vteps }}
+         interfaces: {{ interfaces }}      
+{%       endif %}
+{%-      endfor %}
+{%-    endfor %}
+{%  endif %}
+{%-  endfor %}

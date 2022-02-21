@@ -1,0 +1,50 @@
+---
+## First Play
+- hosts: localhost
+  name: Generate per-node model
+  gather_facts: no
+  tags: [ per-node-model ]
+  vars_files:
+  - "{{model|default('service-model.yml')}}"
+  tasks:
+  - name: Create per-node model from service model
+    template: src=service-to-nodes.j2 dest=./node-model.yml
+
+## Second Play
+- name: Generate configuration files
+  gather_facts: no
+  connection: local
+  hosts: all
+  tags: [ configuration ]
+  tasks:
+    - include_vars: "./node-model.yml"
+    - name: Create folder for configuration files
+      file: path=node_configs  state=directory
+      run_once: true
+    - name: Generate configuration files
+      template: src={{dev_os}}/translation.j2 dest=node_configs/{{inventory_hostname}}-config.txt
+
+## Third Play
+# commit variable is used to control the play
+# if commit=0 then we will not commit the changes we will only generate diff
+# if commit=1 then we will  commit the changes and generate diff
+- name: Push configuration files
+  gather_facts: no
+  connection: local
+  hosts: all
+  tags: [ deploy ]
+  tasks:
+    - include_vars: "./node-model.yml"
+    - file: path=diff state=directory
+      run_once: true
+    - name: Load configuration to nodes
+      napalm_install_config:
+        hostname: "{{ ansible_host }}"
+        username: "{{ ansible_user }}"
+        dev_os: "{{dev_os}}"
+        password: "{{ ansible_ssh_pass }}"
+        config_file: node_configs/{{inventory_hostname}}-config.txt
+        commit_changes: "{{commit}}"
+        replace_config: "0"
+        diff_file: diff/{{inventory_hostname}}-diff.txt
+      when: "inventory_hostname in nodes.keys()"
