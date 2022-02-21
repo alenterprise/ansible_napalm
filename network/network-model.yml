@@ -2,6 +2,28 @@
 common:
   bgp_asn: 65500
 
+nodes: 
+  - 
+    mgmt: "172.26.11.37"
+    name: spine1
+    rid: "172.16.10.2"
+  - 
+    mgmt: "172.26.11.35"
+    name: leaf2
+    rid: "172.16.10.3"
+  - 
+    mgmt: "172.26.11.36"
+    name: leaf1
+    rid: "172.16.10.1"
+  - 
+    mgmt: "172.26.11.38"
+    name: spine2
+    rid: "172.16.10.4"
+  - 
+    mgmt: "172.26.11.39"
+    name: leaf3
+    rid: "172.16.10.5"
+
 links: 
   - 
     cost: 100
@@ -57,27 +79,6 @@ links:
     right_ip: "20.0.0.46"
     right_port: 1/1/24
     vlan: 62
-nodes: 
-  - 
-    mgmt: "172.26.11.37"
-    name: spine1
-    rid: "172.16.10.2"
-  - 
-    mgmt: "172.26.11.35"
-    name: leaf2
-    rid: "172.16.10.3"
-  - 
-    mgmt: "172.26.11.36"
-    name: leaf1
-    rid: "172.16.10.1"
-  - 
-    mgmt: "172.26.11.38"
-    name: spine2
-    rid: "172.16.10.4"
-  - 
-    mgmt: "172.26.11.39"
-    name: leaf3
-    rid: "172.16.10.5"
 
 ospf: 
   area: "0.0.0.0"
