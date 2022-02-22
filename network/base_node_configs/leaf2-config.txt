@@ -1,0 +1,50 @@
+! Command: show running-config
+! device: leaf1 (vEOS, EOS-4.25.0F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname leaf1
+!
+spanning-tree mode mstp
+!
+no aaa root
+!
+username admin role network-admin secret sha512 $6$KNPZ6Vq3GuJgJ3Nf$RRb0k9S9xKg0cg.GMy0cD9IKLs61Eh4vS2.2mLEcIyUufBChBFr2TZ9.QAMHcPmclyshEvsPZbD4pMYNp1zEh0
+!
+interface Ethernet1
+!
+interface Ethernet2
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Ethernet9
+!
+interface Ethernet10
+!
+interface Ethernet11
+!
+interface Ethernet12
+!
+interface Management1
+   ip address 172.26.11.35/24
+!
+no ip routing
+!
+management api http-commands
+   no shutdown
+!
+end
