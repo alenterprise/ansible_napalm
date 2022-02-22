@@ -9,13 +9,13 @@
 #   - A hostname/ip can be a member of multiple groups
 
 [ALE]
-spine2 ansible_network=aos host=172.26.11.38 ansible_user=admin ansible_ssh_pass=switch port=22
-leaf3 ansible_network=aos host=172.26.11.39 ansible_user=admin ansible_ssh_pass=switch port=22
+Spine2 ansible_network=aos host=172.26.11.38 ansible_user=admin ansible_ssh_pass=switch port=22
+Leaf3 ansible_network=aos host=172.26.11.39 ansible_user=admin ansible_ssh_pass=switch port=22
 
 [ARISTA]
-leaf1 ansible_network=eos host=172.26.11.36 ansible_user=admin ansible_ssh_pass=switch port=22
-leaf2 ansible_network=eos host=172.26.11.35 ansible_user=admin ansible_ssh_pass=switch port=22
-spine1 ansible_network=eos host=172.26.11.37 ansible_user=admin ansible_ssh_pass=switch port=22
+Leaf1 ansible_network=eos host=172.26.11.36 ansible_user=admin ansible_ssh_pass=switch port=22
+Leaf2 ansible_network=eos host=172.26.11.35 ansible_user=admin ansible_ssh_pass=switch port=22
+Spine1 ansible_network=eos host=172.26.11.37 ansible_user=admin ansible_ssh_pass=switch port=22
 
 [ALE:vars]
 dev_os=aos
