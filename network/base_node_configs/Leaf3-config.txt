@@ -1,5 +1,5 @@
 ! Chassis:
-
+system name "Leaf3"
 ! Configuration:
 configuration error-file-limit 2
 
