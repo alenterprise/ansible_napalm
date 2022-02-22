@@ -1,91 +1,56 @@
---- 
+---
+
 common:
   bgp_asn: 65500
 
-nodes: 
-  - 
-    mgmt: "172.26.11.37"
-    name: spine1
-    rid: "172.16.10.2"
-  - 
-    mgmt: "172.26.11.35"
-    name: leaf2
-    rid: "172.16.10.3"
-  - 
-    mgmt: "172.26.11.36"
-    name: leaf1
-    rid: "172.16.10.1"
-  - 
-    mgmt: "172.26.11.38"
-    name: spine2
-    rid: "172.16.10.4"
-  - 
-    mgmt: "172.26.11.39"
-    name: leaf3
-    rid: "172.16.10.5"
+nodes:
+  - name: Spine1
+    mgmt: 172.26.11.37
+    rid: 172.17.1.1
 
-links: 
-  - 
-    cost: 100
-    left: leaf1
-    left_ip: "20.0.0.9"
-    left_port: Ethernet1
-    right: spine1
-    right_ip: "20.0.0.10"
-    right_port: Ethernet1
-    vlan: 12
-  - 
-    cost: 100
-    left: leaf1
-    left_ip: "20.0.0.17"
-    left_port: Ethernet2
-    right: spine2
-    right_ip: "20.0.0.18"
-    right_port: 1/1/6
-    vlan: 13
-  - 
-    cost: 100
-    left: spine1
-    left_ip: "20.0.0.25"
-    left_port: Ethernet2
-    right: leaf2
-    right_ip: "20.0.0.26"
-    right_port: Ethernet1
-    vlan: 32
-  - 
-    cost: 100
-    left: spine1
-    left_ip: "20.0.0.33"
-    left_port: Ethernet3
-    right: leaf3
-    right_ip: "20.0.0.34"
-    right_port: 1/1/1
-    vlan: 42
-  - 
-    cost: 100
-    left: leaf2
-    left_ip: "20.0.0.41"
-    left_port: Ethernet2
-    right: spine2
-    right_ip: "20.0.0.42"
-    right_port: 1/1/23
-    vlan: 52
-  - 
-    cost: 100
-    left: spine2
-    left_ip: "20.0.0.45"
-    left_port: 1/1/24
-    right: leaf3
-    right_ip: "20.0.0.46"
-    right_port: 1/1/24
-    vlan: 62
+  - name: Spine2
+    mgmt: 172.26.11.38
+    rid: 172.17.1.2
+    
+  - name: Leaf1
+    mgmt: 172.26.11.36
+    rid: 172.17.1.3
 
-ospf: 
-  area: "0.0.0.0"
-  network: p2p
-  
-bgp: 
-  rr: [172.16.10.2, 172.16.10.4]
-  clients: [172.16.10.1, 172.16.10.3, 172.16.10.5]
+  - name: Leaf2
+    mgmt: 172.26.11.35
+    rid: 172.17.1.4
+
+  - name: Leaf3
+    mgmt: 172.26.11.39
+    rid: 172.17.1.5
+
+
+links:
+  - {left: Spine1, left_port: Ethernet1, left_ip: 20.0.0.1, vlan: 11,
+      right: Leaf1, right_port: Ethernet1, right_ip: 20.0.0.2, cost: 100 }
+
+  - {left: Spine1, left_port: Ethernet2, left_ip: 20.0.0.5, vlan: 12,
+      right: Leaf2, right_port: Ethernet1, right_ip: 20.0.0.6, cost: 100 }
+
+  - {left: Spine1, left_port: Ethernet3, left_ip: 20.0.0.09, vlan: 13,
+      right: Leaf3, right_port: 1/1/1, right_ip: 20.0.0.10, cost: 100 }
+
+  - {left: Spine2, left_port: 1/1/6, left_ip: 20.0.0.13, vlan: 21,
+      right: Leaf1, right_port: Ethernet2, right_ip: 20.0.0.14, cost: 100 }
+
+  - {left: Spine2, left_port: 1/1/23, left_ip: 20.0.0.17, vlan: 22,
+      right: Leaf2, right_port: Ethernet2, right_ip: 20.0.0.18, cost: 100 }
+
+  - {left: Spine2, left_port: 1/1/24, left_ip: 20.0.0.21, vlan: 23,
+      right: Leaf3, right_port: 1/1/24, right_ip: 20.0.0.22, cost: 100 }
+
+
+bgp:
+  rr: [Spine1, Spine2]
+  clients: [Leaf1, Leaf2, Leaf3]
   af:
     - ipv4
+
+ospf:
+  area: 0.0.0.0
+  network: p2p
