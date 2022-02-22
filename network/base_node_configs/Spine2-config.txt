@@ -1,9 +1,13 @@
 ! Chassis:
 system name "Spine2"
+
 ! Configuration:
 configuration error-file-limit 2
 
 ! Capability Manager:
+hash-control extended
+
+! Multi-Chassis:
 ! Virtual Flow Control:
 ! LFP:
 ! Interface:
@@ -14,8 +18,8 @@ vlan 1 admin-state enable
 
 ! PVLAN:
 ! Spanning Tree:
+spantree mode flat
 spantree vlan 1 admin-state enable
-
 ! DA-UNP:
 ! Bridging:
 ! Port Mirroring:
@@ -42,11 +46,12 @@ aaa tacacs command-authorization disable
 ! Server Load Balance:
 ! High Availability Vlan:
 ! Session Manager:
+session cli timeout 100
+session prompt default "Spine2>"
+
 ! Web:
 ! Trap Manager:
 ! Health Monitor:
-health threshold memory 80
-
 ! System Service:
 ! SNMP:
 ! BFD:
@@ -62,6 +67,7 @@ health threshold memory 80
 ! OSPF3:
 ! BGP:
 ! ISIS:
+! Netsec:
 ! Module:
 ! LAN Power:
 ! RDP:
@@ -82,7 +88,6 @@ service stats disable
 ! SIP Snooping:
 ! DHCP Server:
 ! DHCPv6 Relay:
-! DHCPv6 Snooping:
 ! DHCPv6 Server:
 ! DHCP Message Service:
 ! DHCP Active Lease Service:
@@ -92,16 +97,3 @@ service stats disable
 ! Loopback Detection:
 ! VM-SNOOPING:
 ! PPPOE-IA:
-! Security:
-! Zero Configuration:
-! MAC Security:
-! OVC:
-! EFM-OAM:
-! ALARM-MANAGER:
-! DEVICE-PROFILE:
-! PTP:
-! IP DHCP RELAY:
-! TEST-OAM:
-! LOOPBACK TEST:
-! UDP6 RELAY:
-! MGMT AGENT:
